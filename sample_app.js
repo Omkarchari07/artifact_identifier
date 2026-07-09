@@ -27,9 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentImageFile = null;
     let cameraStream = null;
-    const predictEndpoint = window.location.protocol === "file:"
-        ? "http://127.0.0.1:5000/predict"
-        : "/predict";
+    const predictEndpoint = "https://artifact-identifier.onrender.com/predict";
 
     uploadBox.addEventListener("click", () => {
         artifactImage.click();
