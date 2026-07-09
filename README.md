@@ -6,6 +6,7 @@ AI Artifact Identifier is a Flask + TensorFlow project that identifies archaeolo
 
 - Frontend: Vercel
 - Backend: Render
+- Frontend prediction requests are proxied through Vercel at `/api/predict` to avoid browser CORS issues.
 
 ## Frontend Entry
 

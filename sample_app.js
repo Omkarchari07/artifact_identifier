@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentImageFile = null;
     let cameraStream = null;
-    const predictEndpoint = "https://artifact-identifier.onrender.com/predict";
+    const predictEndpoint = "/api/predict";
 
     uploadBox.addEventListener("click", () => {
         artifactImage.click();
@@ -74,12 +74,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formData
             });
 
-            const data = await response.json();
+            const contentType = response.headers.get("content-type") || "";
+            const responseText = await response.text();
+            const data = contentType.includes("application/json") && responseText
+                ? JSON.parse(responseText)
+                : null;
 
             loadingSpinner.style.display = "none";
 
             if (!response.ok || data.error) {
-                alert(data.error || "Prediction request failed.");
+                const backendError = data && data.error
+                    ? data.error
+                    : responseText.trim() || `Backend error (${response.status})`;
+
+                alert(backendError);
                 return;
             }
 
