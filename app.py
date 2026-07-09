@@ -187,7 +187,7 @@ def predict():
 
 @app.route("/")
 def home():
-    return send_from_directory(BASE_DIR, "sample_app.html")
+    return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/sample_app.js")

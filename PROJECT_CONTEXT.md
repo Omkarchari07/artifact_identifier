@@ -20,12 +20,13 @@ Museum visitors and students often cannot identify artifacts. Existing solutions
 - EfficientNetB0 transfer learning model
 - Flask backend
 - HTML/CSS/JavaScript frontend
+- Frontend entry file renamed to `index.html` for Vercel deployment
 - Image upload and prediction
 - Top-K predictions
 - Confidence display
 - Local labels.json
 - Museums of India scraping pipeline completed for Goa sculpture collection
-- Local artifact metadata database prepared
+- Verified local metadata is loaded directly from `dataset_split/val`
 - Model saved as `.keras`
 
 ### In Progress
@@ -94,7 +95,7 @@ artifact_identifier/
 - app.py
 - train.py
 - preprocess.py
-- sample_app.html
+- index.html
 - sample_app.js
 - requirements.txt
 
@@ -121,13 +122,18 @@ artifact_identifier/
 Dataset → Resize → Split → Augmentation → Head Training → Fine Tuning → Save Model → Save Labels
 
 ## Scraping Pipeline
-See SCRAPING_PHASE_SUMMARY.md. Official Goa Museum metadata is scraped and stored locally for offline retrieval.
+See SCRAPING_PHASE_SUMMARY.md. Verified metadata files in `dataset_split/val` are used as the offline source of truth for artifact information.
 
 ## Flask Workflow
 Frontend uploads image → Flask preprocesses → CNN predicts → Returns Top-1 + Top-K JSON → Frontend displays results.
 
+## Deployment
+- Frontend: Vercel serves `index.html`
+- Backend: Render runs `app.py`
+- Local Flask home route serves `index.html` for standalone use
+
 ## Database Workflow
-Prediction class → Lookup local JSON → Return artifact metadata → Future PDF generation.
+Prediction class → Lookup verified local metadata from `dataset_split/val` → Return artifact metadata → Future PDF generation.
 
 ## Confidence Threshold
 Planned: if confidence < configurable threshold (default around 45–65%), classify as Unknown Artifact.
