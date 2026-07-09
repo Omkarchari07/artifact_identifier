@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 import os
+import logging
+import time
 from PIL import Image
 import numpy as np
 import tensorflow as tf
@@ -10,6 +12,7 @@ from pathlib import Path
 
 app = Flask(__name__)
 CORS(app)
+app.logger.setLevel(logging.INFO)
 
 # =========================
 # LOAD MODEL
@@ -22,7 +25,10 @@ LABELS_PATH = MODEL_DIR / "labels.json"
 ROOT_LABELS_PATH = BASE_DIR / "labels.json"
 ARTIFACT_METADATA_DIR = BASE_DIR / "dataset_split" / "val"
 
+app.logger.info("Loading TensorFlow model from %s", MODEL_PATH)
+_model_load_start = time.perf_counter()
 model = tf.keras.models.load_model(MODEL_PATH)
+app.logger.info("TensorFlow model loaded in %.2f seconds", time.perf_counter() - _model_load_start)
 
 # =========================
 # LOAD LABELS
@@ -64,6 +70,7 @@ def load_artifact_database(metadata_root):
 
 
 ARTIFACT_DATABASE = load_artifact_database(ARTIFACT_METADATA_DIR)
+app.logger.info("Loaded %d artifact metadata records from %s", len(ARTIFACT_DATABASE), ARTIFACT_METADATA_DIR)
 
 ARTIFACT_INDEX = {}
 
@@ -141,16 +148,28 @@ def lookup_artifact_info(class_name):
 @app.route("/predict", methods=["POST"])
 def predict():
 
+    request_start = time.perf_counter()
+    app.logger.info("/predict request received")
+
     if "image" not in request.files:
+        app.logger.warning("/predict request missing image field")
         return jsonify({"error": "No image uploaded"}), 400
 
     file = request.files["image"]
+
+    app.logger.info("Received upload filename=%s content_type=%s", file.filename, file.content_type)
+
+    preprocess_start = time.perf_counter()
 
     img = Image.open(file.stream).convert("RGB")
 
     img = prepare_image(img)
 
+    app.logger.info("Image preprocessing completed in %.2f seconds", time.perf_counter() - preprocess_start)
+
+    predict_start = time.perf_counter()
     preds = model.predict(img)[0]
+    app.logger.info("model.predict() completed in %.2f seconds", time.perf_counter() - predict_start)
 
     top_idx = int(np.argmax(preds))
 
@@ -172,6 +191,8 @@ def predict():
             "probability": float(preds[i]),
             "artifact_info": lookup_artifact_info(class_name)
         })
+
+    app.logger.info("Response generation completed in %.2f seconds", time.perf_counter() - request_start)
 
     return jsonify({
         "top1": {
