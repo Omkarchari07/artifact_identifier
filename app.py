@@ -19,7 +19,7 @@ MODEL_DIR = BASE_DIR / "models"
 MODEL_PATH = MODEL_DIR / "final_model.keras"
 LABELS_PATH = MODEL_DIR / "labels.json"
 ROOT_LABELS_PATH = BASE_DIR / "labels.json"
-ARTIFACT_DB_PATH = BASE_DIR / "museum_scraper" / "artifact_database.json"
+ARTIFACT_METADATA_DIR = BASE_DIR / "dataset_split" / "val"
 
 model = tf.keras.models.load_model(MODEL_PATH)
 
@@ -32,8 +32,37 @@ labels_path = LABELS_PATH if LABELS_PATH.exists() else ROOT_LABELS_PATH
 with open(labels_path, "r", encoding="utf-8") as f:
     CLASS_NAMES = json.load(f)
 
-with open(ARTIFACT_DB_PATH, "r", encoding="utf-8") as f:
-    ARTIFACT_DATABASE = json.load(f)
+
+def load_artifact_database(metadata_root):
+
+    database = {}
+
+    if not metadata_root.exists():
+        return database
+
+    for class_folder in metadata_root.iterdir():
+        if not class_folder.is_dir():
+            continue
+
+        preferred_path = class_folder / "info.json"
+
+        if preferred_path.exists():
+            json_path = preferred_path
+        else:
+            json_files = [path for path in class_folder.iterdir() if path.is_file() and path.suffix.lower() == ".json"]
+
+            if len(json_files) != 1:
+                continue
+
+            json_path = json_files[0]
+
+        with open(json_path, "r", encoding="utf-8") as f:
+            database[class_folder.name] = json.load(f)
+
+    return database
+
+
+ARTIFACT_DATABASE = load_artifact_database(ARTIFACT_METADATA_DIR)
 
 ARTIFACT_INDEX = {}
 
