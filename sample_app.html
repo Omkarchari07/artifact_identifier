@@ -159,8 +159,7 @@
         }
 
         .upload-card,
-        .result-card,
-        .topk-card {
+        .result-card {
             padding: 22px;
         }
 
@@ -361,33 +360,6 @@
             color: #8c531b;
         }
 
-        .prediction-card {
-            padding: 16px;
-            border-radius: 16px;
-            border: 1px solid rgba(86, 62, 43, 0.1);
-            background: rgba(255, 255, 255, 0.62);
-            margin-bottom: 12px;
-        }
-
-        .prediction-card:last-child {
-            margin-bottom: 0;
-        }
-
-        .prediction-head {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            align-items: baseline;
-            margin-bottom: 10px;
-        }
-
-        .prediction-note {
-            margin-top: 10px;
-            color: var(--muted);
-            font-size: 0.95rem;
-            line-height: 1.55;
-        }
-
         .spinner-border {
             color: var(--accent);
         }
@@ -431,8 +403,7 @@
             }
 
             .upload-card,
-            .result-card,
-            .topk-card {
+            .result-card {
                 padding: 18px;
                 border-radius: 16px;
             }
@@ -562,13 +533,6 @@
                         <p class="artifact-description" id="artifactDescription"></p>
                     </div>
 
-                    <div class="glass-card topk-card">
-                        <div class="section-title">
-                            <h3>Top Predictions</h3>
-                            <span>Ranked confidence</span>
-                        </div>
-                        <div id="allPredictions"></div>
-                    </div>
                 </section>
             </div>
         </main>

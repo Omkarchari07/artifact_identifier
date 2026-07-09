@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const primaryClass = document.getElementById("primaryClass");
     const primaryConfidence = document.getElementById("primaryConfidence");
     const primaryConfidenceText = document.getElementById("primaryConfidenceText");
-    const allPredictions = document.getElementById("allPredictions");
     const artifactMatchState = document.getElementById("artifactMatchState");
     const artifactTitle = document.getElementById("artifactTitle");
     const artifactPeriod = document.getElementById("artifactPeriod");
@@ -88,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             displayPrimaryResult(data.top1);
             displayArtifactInfo(data.top1.artifact_info);
-            displayTopK(data.top_k);
 
             resultStack.classList.add("is-visible");
             resultSection.style.display = "block";
@@ -213,28 +211,5 @@ document.addEventListener("DOMContentLoaded", () => {
             .trim();
 
         artifactDescription.textContent = description || "No description available for this class yet.";
-    }
-
-    function displayTopK(topK) {
-        allPredictions.innerHTML = topK.map((prediction) => {
-            const percent = (prediction.probability * 100).toFixed(2);
-            const info = prediction.artifact_info || {};
-            const subtitle = [info.title, info.period].filter(Boolean).join(" - ");
-
-            return `
-                <div class="prediction-card">
-                    <div class="prediction-head">
-                        <strong>${prediction.class}</strong>
-                        <span>${percent}%</span>
-                    </div>
-                    <div class="confidence-bar">
-                        <div class="confidence-fill" style="width:${percent}%">${percent}%</div>
-                    </div>
-                    <div class="prediction-note">
-                        ${subtitle || "No metadata match for this prediction."}
-                    </div>
-                </div>
-            `;
-        }).join("");
     }
 });
