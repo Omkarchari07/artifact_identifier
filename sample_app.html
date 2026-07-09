@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Artifact Identifier</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #231c16;
+            --muted: #68584a;
+            --card: rgba(255, 250, 242, 0.88);
+            --card-strong: rgba(255, 250, 242, 0.94);
+            --card-border: rgba(92, 61, 37, 0.18);
+            --accent: #0b477c;
+            --accent-2: #8f572e;
+            --warm: #c88948;
+            --shadow: 0 24px 64px rgba(32, 20, 12, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Source Sans 3", sans-serif;
+            color: var(--ink);
+            background: #d8c1a1;
+        }
+
+        .page-shell {
+            min-height: 100vh;
+            background:
+                linear-gradient(90deg, rgba(255, 246, 229, 0.74), rgba(255, 246, 229, 0.42) 42%, rgba(57, 34, 20, 0.18)),
+                url("assets/archaeology-bg.jpeg") center / cover fixed;
+        }
+
+        .site-header {
+            background: rgba(247, 248, 250, 0.92);
+            border-bottom: 1px solid rgba(35, 28, 22, 0.08);
+            backdrop-filter: blur(14px);
+        }
+
+        .gov-line {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 10px 18px 0;
+            color: #65615f;
+            font-size: 0.95rem;
+        }
+
+        .brand-row {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 20px 18px 22px;
+            text-align: center;
+        }
+
+        .brand-row h1 {
+            margin: 0;
+            font-family: "Source Sans 3", sans-serif;
+            font-size: clamp(2rem, 4vw, 3.15rem);
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            color: #222b36;
+        }
+
+        .brand-row p {
+            margin: 6px 0 0;
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            font-weight: 600;
+            color: #5d5550;
+        }
+
+        .nav-strip {
+            background: #073f70;
+            color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(18px, 5vw, 62px);
+            font-weight: 700;
+        }
+
+        .nav-inner a {
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .app-frame {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 32px 18px 48px;
+        }
+
+        .page-title {
+            margin-bottom: 18px;
+            color: #fff8ed;
+            text-shadow: 0 3px 14px rgba(0, 0, 0, 0.42);
+        }
+
+        .page-title .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 13px;
+            border-radius: 999px;
+            background: rgba(7, 63, 112, 0.86);
+            font-size: 0.84rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .page-title h2 {
+            max-width: 760px;
+            margin: 12px 0 0;
+            font-family: "Cormorant Garamond", serif;
+            font-size: clamp(2.4rem, 5vw, 4.2rem);
+            line-height: 0.98;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .result-stack {
+            display: none;
+        }
+
+        .result-stack.is-visible {
+            display: grid;
+        }
+
+        .glass-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            border-radius: 18px;
+        }
+
+        .upload-card,
+        .result-card,
+        .topk-card {
+            padding: 22px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        h2,
+        h3 {
+            font-family: "Cormorant Garamond", serif;
+            letter-spacing: 0.01em;
+        }
+
+        .section-title h2,
+        .section-title h3 {
+            margin: 0;
+        }
+
+        .section-title span {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .input-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .image-action {
+            border: 1.5px dashed rgba(92, 61, 37, 0.34);
+            border-radius: 16px;
+            padding: 18px 14px;
+            min-height: 150px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            background: rgba(255, 248, 237, 0.82);
+            color: var(--ink);
+        }
+
+        .image-action:hover {
+            transform: translateY(-2px);
+            border-color: rgba(7, 63, 112, 0.6);
+            background: rgba(255, 250, 242, 0.96);
+        }
+
+        .action-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 10px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: rgba(7, 63, 112, 0.1);
+            color: var(--accent);
+            font-size: 1.55rem;
+            font-weight: 800;
+        }
+
+        .image-action h5 {
+            margin-bottom: 6px;
+            font-weight: 800;
+        }
+
+        .image-action p {
+            margin-bottom: 0;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .camera-panel {
+            display: none;
+            border-radius: 16px;
+            padding: 14px;
+            background: rgba(35, 28, 22, 0.08);
+            border: 1px solid rgba(92, 61, 37, 0.14);
+        }
+
+        #cameraPreview {
+            width: 100%;
+            max-height: 380px;
+            border-radius: 14px;
+            background: #16120f;
+            object-fit: cover;
+        }
+
+        #previewImage {
+            width: 100%;
+            max-height: 380px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 1px solid rgba(86, 62, 43, 0.16);
+            display: none;
+        }
+
+        .btn-primary {
+            border: none;
+            background: linear-gradient(135deg, var(--accent), #0a5e9e);
+            box-shadow: 0 12px 24px rgba(7, 63, 112, 0.24);
+            padding: 12px 18px;
+            font-weight: 800;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #07365f, #084f86);
+        }
+
+        .btn-outline-secondary {
+            border-color: rgba(92, 61, 37, 0.32);
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .confidence-bar {
+            background: rgba(80, 58, 43, 0.12);
+            width: 100%;
+            height: 22px;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            background: linear-gradient(90deg, #073f70, #b77a3e);
+            height: 100%;
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            line-height: 22px;
+            border-radius: 999px;
+            min-width: 56px;
+        }
+
+        .primary-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(7, 63, 112, 0.1);
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .info-pill {
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.68);
+            border: 1px solid rgba(86, 62, 43, 0.1);
+        }
+
+        .info-pill .label {
+            display: block;
+            color: var(--muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .info-pill .value {
+            font-weight: 800;
+        }
+
+        .artifact-description {
+            margin-top: 14px;
+            color: var(--ink);
+            line-height: 1.7;
+        }
+
+        .meta-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(54, 122, 90, 0.12);
+            color: #2f6b4e;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .meta-status.not-matched {
+            background: rgba(171, 104, 39, 0.14);
+            color: #8c531b;
+        }
+
+        .prediction-card {
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(86, 62, 43, 0.1);
+            background: rgba(255, 255, 255, 0.62);
+            margin-bottom: 12px;
+        }
+
+        .prediction-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .prediction-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        .prediction-note {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.55;
+        }
+
+        .spinner-border {
+            color: var(--accent);
+        }
+
+        #resultSection {
+            display: none;
+        }
+
+        @media (max-width: 992px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-shell {
+                background-attachment: scroll;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .gov-line {
+                padding: 8px 12px 0;
+            }
+
+            .brand-row {
+                padding: 14px 12px 16px;
+            }
+
+            .nav-inner {
+                justify-content: flex-start;
+                overflow-x: auto;
+                gap: 24px;
+            }
+
+            .app-frame {
+                padding: 22px 12px 34px;
+            }
+
+            .input-actions,
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-card,
+            .result-card,
+            .topk-card {
+                padding: 18px;
+                border-radius: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <header class="site-header">
+            <div class="gov-line">Government of Goa | Goa Sarkar</div>
+            <div class="brand-row">
+                <h1>AI Artifact Identifier</h1>
+                <p>Image recognition for heritage artifact discovery</p>
+            </div>
+            <nav class="nav-strip" aria-label="Main navigation">
+                <div class="nav-inner">
+                    <a href="#">Home</a>
+                    <a href="#">Explore</a>
+                    <a href="#">News &amp; Blog</a>
+                    <a href="#">Events &amp; Festivals</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="app-frame">
+            <section class="page-title" aria-labelledby="appTitle">
+                <div class="eyebrow">Artifact Identifier</div>
+                <h2 id="appTitle">Identify heritage artifacts from a photo.</h2>
+            </section>
+
+            <div class="content-grid">
+                <section class="glass-card upload-card" aria-labelledby="uploadTitle">
+                    <div class="section-title">
+                        <h2 id="uploadTitle">Select Image</h2>
+                        <span>Camera or gallery</span>
+                    </div>
+
+                    <form id="uploadForm">
+                        <div class="input-actions">
+                            <button type="button" id="uploadBox" class="image-action">
+                                <div class="action-icon">+</div>
+                                <h5>Choose Image</h5>
+                                <p>Select a PNG, JPG, or JPEG from your device.</p>
+                            </button>
+
+                            <button type="button" id="openCameraButton" class="image-action">
+                                <div class="action-icon">[]</div>
+                                <h5>Take Photo</h5>
+                                <p>Open the device camera and capture an artifact.</p>
+                            </button>
+                        </div>
+
+                        <input type="file" id="artifactImage" accept="image/*" class="d-none">
+                        <input type="file" id="cameraImage" accept="image/*" capture="environment" class="d-none">
+
+                        <div id="cameraPanel" class="camera-panel mb-3">
+                            <video id="cameraPreview" autoplay playsinline muted></video>
+                            <canvas id="cameraCanvas" class="d-none"></canvas>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <button type="button" id="capturePhotoButton" class="btn btn-primary flex-fill">Capture Photo</button>
+                                <button type="button" id="closeCameraButton" class="btn btn-outline-secondary flex-fill">Close Camera</button>
+                            </div>
+                        </div>
+
+                        <img id="previewImage" alt="Selected artifact preview">
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3">
+                            Analyze Artifact
+                        </button>
+                    </form>
+
+                    <div id="loadingSpinner" class="text-center mt-4" style="display:none;">
+                        <div class="spinner-border" role="status"></div>
+                        <p class="mt-2 mb-0">Analyzing artifact...</p>
+                    </div>
+                </section>
+
+                <section id="resultStack" class="result-stack gap-3" aria-label="Prediction results">
+                    <div id="resultSection" class="glass-card result-card">
+                        <div class="section-title">
+                            <h2>Prediction Result</h2>
+                            <span>Model output and metadata</span>
+                        </div>
+
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="primary-badge" id="primaryClass">Awaiting prediction</div>
+                                <div class="text-muted mt-2" id="primaryConfidenceText">0%</div>
+                            </div>
+                            <div class="meta-status" id="artifactMatchState">Metadata not loaded</div>
+                        </div>
+
+                        <div class="confidence-bar mb-3">
+                            <div id="primaryConfidence" class="confidence-fill" style="width:0%;">0%</div>
+                        </div>
+
+                        <div class="info-grid" id="artifactInfoGrid">
+                            <div class="info-pill">
+                                <span class="label">Title</span>
+                                <span class="value" id="artifactTitle">-</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="label">Period</span>
+                                <span class="value" id="artifactPeriod">-</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="label">Object type</span>
+                                <span class="value" id="artifactType">-</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="label">Material</span>
+                                <span class="value" id="artifactMaterial">-</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="label">Provenance</span>
+                                <span class="value" id="artifactProvenance">-</span>
+                            </div>
+                            <div class="info-pill">
+                                <span class="label">Style / culture</span>
+                                <span class="value" id="artifactStyleCulture">-</span>
+                            </div>
+                        </div>
+
+                        <p class="artifact-description" id="artifactDescription"></p>
+                    </div>
+
+                    <div class="glass-card topk-card">
+                        <div class="section-title">
+                            <h3>Top Predictions</h3>
+                            <span>Ranked confidence</span>
+                        </div>
+                        <div id="allPredictions"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="sample_app.js"></script>
+</body>
+
+</html>
