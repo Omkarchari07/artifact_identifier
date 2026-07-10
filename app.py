@@ -168,15 +168,8 @@ def predict():
     app.logger.info("Image preprocessing completed in %.2f seconds", time.perf_counter() - preprocess_start)
 
     predict_start = time.perf_counter()
-
-    app.logger.info("Starting TensorFlow inference...")
-
-    preds = model.predict(img, verbose=0)[0]
-
-    app.logger.info(
-        "TensorFlow inference completed in %.2f seconds",
-        time.perf_counter() - predict_start
-    )
+    preds = model.predict(img)[0]
+    app.logger.info("model.predict() completed in %.2f seconds", time.perf_counter() - predict_start)
 
     top_idx = int(np.argmax(preds))
 
