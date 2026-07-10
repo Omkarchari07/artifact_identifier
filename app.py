@@ -168,6 +168,8 @@ def predict():
     app.logger.info("Image preprocessing completed in %.2f seconds", time.perf_counter() - preprocess_start)
 
     predict_start = time.perf_counter()
+    preds = model.predict(img)[0]
+    app.logger.info("model.predict() completed in %.2f seconds", time.perf_counter() - predict_start)
 
     app.logger.info("Starting TensorFlow inference...")
 
