@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/predict",
-      "destination": "https://artifact-identifier.onrender.com/predict"
+      "destination": "https://web-production-e1080.up.railway.app/predict"
     }
   ]
 }
