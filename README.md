@@ -5,7 +5,7 @@ AI Artifact Identifier is a Flask + TensorFlow project that identifies archaeolo
 ## Deployment
 
 - Frontend: Vercel
-- Backend: Render
+- Backend: Railway
 - Frontend prediction requests are proxied through Vercel at `/api/predict` to avoid browser CORS issues.
 
 ## Frontend Entry
@@ -29,8 +29,3 @@ Verified artifact metadata is loaded from `dataset_split/val`.
 - `preprocess.py`
 - `requirements.txt`
 - `requirements-dev.txt`
-
-## Notes
-
-- Do not change the model or preprocessing pipeline unless retraining.
-- Keep `dataset_split/val` as the source of truth for artifact metadata.
