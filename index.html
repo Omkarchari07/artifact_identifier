@@ -358,11 +358,14 @@
 
         .result-actions {
             display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             justify-content: flex-end;
             margin-top: 18px;
         }
 
-        #downloadPdfButton {
+        #downloadPdfButton,
+        #searchArtifactButton {
             display: none;
             align-items: center;
             justify-content: center;
@@ -371,7 +374,8 @@
             font-weight: 800;
         }
 
-        #downloadPdfButton.is-visible {
+        #downloadPdfButton.is-visible,
+        #searchArtifactButton.is-visible {
             display: inline-flex;
         }
 
@@ -561,6 +565,9 @@
                         <p class="artifact-description" id="artifactDescription"></p>
 
                         <div class="result-actions">
+                            <button type="button" id="searchArtifactButton" class="btn btn-outline-secondary">
+                                Search Info
+                            </button>
                             <button type="button" id="downloadPdfButton" class="btn btn-primary">
                                 Download PDF
                             </button>

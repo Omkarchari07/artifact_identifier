@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const artifactProvenance = document.getElementById("artifactProvenance");
     const artifactStyleCulture = document.getElementById("artifactStyleCulture");
     const artifactDescription = document.getElementById("artifactDescription");
+    const searchArtifactButton = document.getElementById("searchArtifactButton");
     const downloadPdfButton = document.getElementById("downloadPdfButton");
 
     let currentImageFile = null;
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     capturePhotoButton.addEventListener("click", capturePhotoFromCamera);
     closeCameraButton.addEventListener("click", closeLiveCamera);
+    searchArtifactButton.addEventListener("click", searchArtifactInfo);
     downloadPdfButton.addEventListener("click", generateArtifactPdf);
 
     uploadForm.addEventListener("submit", async (event) => {
@@ -68,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loadingSpinner.style.display = "block";
         resultStack.classList.remove("is-visible");
         resultSection.style.display = "none";
+        searchArtifactButton.classList.remove("is-visible");
         downloadPdfButton.classList.remove("is-visible");
         latestPrediction = null;
         latestReportDate = null;
@@ -105,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             resultStack.classList.add("is-visible");
             resultSection.style.display = "block";
+            searchArtifactButton.classList.add("is-visible");
             downloadPdfButton.classList.add("is-visible");
         } catch (error) {
             loadingSpinner.style.display = "none";
@@ -236,7 +240,48 @@ document.addEventListener("DOMContentLoaded", () => {
         latestReportDate = null;
         resultStack.classList.remove("is-visible");
         resultSection.style.display = "none";
+        searchArtifactButton.classList.remove("is-visible");
         downloadPdfButton.classList.remove("is-visible");
+    }
+
+    function searchArtifactInfo() {
+        if (!latestPrediction) {
+            alert("Please analyze an artifact before searching for more information.");
+            return;
+        }
+
+        const query = buildArtifactSearchQuery(latestPrediction);
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        window.open(searchUrl, "_blank", "noopener,noreferrer");
+    }
+
+    function buildArtifactSearchQuery(prediction) {
+        const info = prediction.artifact_info || {};
+        const description = [info.brief_description, info.detailed_description]
+            .filter(Boolean)
+            .join(" ");
+
+        const descriptionKeywords = description
+            .replace(/[^\w\s-]/g, " ")
+            .split(/\s+/)
+            .filter((word) => word.length > 3)
+            .slice(0, 12)
+            .join(" ");
+
+        return [
+            info.title || prediction.class,
+            prediction.class,
+            info.object_type,
+            info.period,
+            info.main_material,
+            info.provenance,
+            info.style,
+            info.culture,
+            descriptionKeywords,
+            "Goa museum artifact"
+        ]
+            .filter(Boolean)
+            .join(" ");
     }
 
     async function generateArtifactPdf() {
