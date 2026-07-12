@@ -356,6 +356,25 @@
             line-height: 1.7;
         }
 
+        .result-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 18px;
+        }
+
+        #downloadPdfButton {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 160px;
+            font-weight: 800;
+        }
+
+        #downloadPdfButton.is-visible {
+            display: inline-flex;
+        }
+
         .meta-status {
             display: inline-flex;
             align-items: center;
@@ -540,6 +559,12 @@
                         </div>
 
                         <p class="artifact-description" id="artifactDescription"></p>
+
+                        <div class="result-actions">
+                            <button type="button" id="downloadPdfButton" class="btn btn-primary">
+                                Download PDF
+                            </button>
+                        </div>
                     </div>
 
                 </section>
@@ -547,6 +572,7 @@
         </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="sample_app.js"></script>
     <script>
         document.getElementById("refreshPageButton").addEventListener("click", function () {

@@ -24,9 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const artifactProvenance = document.getElementById("artifactProvenance");
     const artifactStyleCulture = document.getElementById("artifactStyleCulture");
     const artifactDescription = document.getElementById("artifactDescription");
+    const downloadPdfButton = document.getElementById("downloadPdfButton");
 
     let currentImageFile = null;
     let cameraStream = null;
+    let latestPrediction = null;
+    let latestReportDate = null;
     const predictEndpoint = "/api/predict";
 
     uploadBox.addEventListener("click", () => {
@@ -52,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     capturePhotoButton.addEventListener("click", capturePhotoFromCamera);
     closeCameraButton.addEventListener("click", closeLiveCamera);
+    downloadPdfButton.addEventListener("click", generateArtifactPdf);
 
     uploadForm.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -64,6 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadingSpinner.style.display = "block";
         resultStack.classList.remove("is-visible");
         resultSection.style.display = "none";
+        downloadPdfButton.classList.remove("is-visible");
+        latestPrediction = null;
+        latestReportDate = null;
 
         const formData = new FormData();
         formData.append("image", currentImageFile);
@@ -93,9 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             displayPrimaryResult(data.top1);
             displayArtifactInfo(data.top1.artifact_info);
+            latestPrediction = data.top1;
+            latestReportDate = new Date();
 
             resultStack.classList.add("is-visible");
             resultSection.style.display = "block";
+            downloadPdfButton.classList.add("is-visible");
         } catch (error) {
             loadingSpinner.style.display = "none";
             console.error(error);
@@ -154,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             previewImage.src = URL.createObjectURL(currentImageFile);
             previewImage.style.display = "block";
+            resetResultState();
             closeLiveCamera();
         }, "image/jpeg", 0.92);
     }
@@ -171,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         reader.readAsDataURL(currentImageFile);
+        resetResultState();
         closeLiveCamera();
     }
 
@@ -217,5 +229,223 @@ document.addEventListener("DOMContentLoaded", () => {
             .trim();
 
         artifactDescription.textContent = description || "No description available for this class yet.";
+    }
+
+    function resetResultState() {
+        latestPrediction = null;
+        latestReportDate = null;
+        resultStack.classList.remove("is-visible");
+        resultSection.style.display = "none";
+        downloadPdfButton.classList.remove("is-visible");
+    }
+
+    async function generateArtifactPdf() {
+        if (!latestPrediction || !currentImageFile) {
+            alert("Please analyze an artifact before downloading the PDF.");
+            return;
+        }
+
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            alert("PDF generator could not load. Please check your internet connection and try again.");
+            return;
+        }
+
+        try {
+            downloadPdfButton.disabled = true;
+            downloadPdfButton.textContent = "Preparing PDF...";
+
+            const imageDataUrl = await readFileAsDataUrl(currentImageFile);
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: "pt", format: "a4" });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 48;
+            const contentWidth = pageWidth - margin * 2;
+            const info = latestPrediction.artifact_info || {};
+            const predictedClass = latestPrediction.class || "Artifact";
+            const confidence = Number.isFinite(latestPrediction.probability)
+                ? `${(latestPrediction.probability * 100).toFixed(2)}%`
+                : "-";
+
+            let y = 42;
+
+            doc.setFillColor(7, 63, 112);
+            doc.rect(0, 0, pageWidth, 116, "F");
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            y = addWrappedText(doc, "AI Artifact Identification Report", margin, y, contentWidth, 26);
+            doc.setFontSize(15);
+            y = addWrappedText(doc, predictedClass, margin, y + 8, contentWidth, 20);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text(`Generated: ${formatReportDate(latestReportDate)}`, margin, 96);
+
+            y = 146;
+            doc.setTextColor(35, 28, 22);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text("Uploaded Artifact Image", margin, y);
+            y += 16;
+
+            const imageBox = fitImageToBox(doc, imageDataUrl, contentWidth, 260);
+            doc.addImage(imageDataUrl, getPdfImageType(currentImageFile), margin, y, imageBox.width, imageBox.height);
+            y += imageBox.height + 28;
+
+            doc.setFillColor(244, 237, 226);
+            doc.roundedRect(margin, y, contentWidth, 48, 6, 6, "F");
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.setTextColor(104, 88, 74);
+            doc.text("Predicted Class", margin + 16, y + 18);
+            doc.text("Confidence", margin + contentWidth / 2, y + 18);
+            doc.setFontSize(13);
+            doc.setTextColor(35, 28, 22);
+            doc.text(predictedClass, margin + 16, y + 36, { maxWidth: contentWidth / 2 - 28 });
+            doc.text(confidence, margin + contentWidth / 2, y + 36);
+            y += 74;
+
+            y = addSectionTitle(doc, "Artifact Metadata", margin, y);
+            const fields = [
+                ["Title", info.title || predictedClass],
+                ["Period", info.period],
+                ["Object Type", info.object_type],
+                ["Material", info.main_material],
+                ["Provenance", info.provenance],
+                ["Style", info.style],
+                ["Culture", info.culture],
+                ["Tribe", info.tribe],
+                ["Metadata Source", info.source_label],
+                ["Metadata Match", info.matched ? "Local metadata found" : "No metadata match"]
+            ];
+
+            fields.forEach(([label, value]) => {
+                y = ensureSpace(doc, y, 46, margin, pageHeight);
+                y = addField(doc, label, value || "-", margin, y, contentWidth);
+            });
+
+            const description = [info.brief_description, info.detailed_description]
+                .filter(Boolean)
+                .join(" ")
+                .trim() || "No description available for this class yet.";
+
+            y = ensureSpace(doc, y, 84, margin, pageHeight);
+            y = addSectionTitle(doc, "Description", margin, y + 8);
+            addPagedWrappedText(doc, description, margin, y, contentWidth, 16, margin, pageHeight);
+
+            addPageFooters(doc);
+            doc.save(`${sanitizeFileName(predictedClass)}-artifact-report.pdf`);
+        } catch (error) {
+            console.error(error);
+            alert("Could not generate the PDF report. Please try again.");
+        } finally {
+            downloadPdfButton.disabled = false;
+            downloadPdfButton.textContent = "Download PDF";
+        }
+    }
+
+    function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function getPdfImageType(file) {
+        return file.type && file.type.toLowerCase().includes("png") ? "PNG" : "JPEG";
+    }
+
+    function fitImageToBox(doc, imageDataUrl, maxWidth, maxHeight) {
+        const props = doc.getImageProperties(imageDataUrl);
+        const ratio = Math.min(maxWidth / props.width, maxHeight / props.height, 1);
+
+        return {
+            width: props.width * ratio,
+            height: props.height * ratio
+        };
+    }
+
+    function addSectionTitle(doc, title, x, y) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.setTextColor(7, 63, 112);
+        doc.text(title, x, y);
+        return y + 20;
+    }
+
+    function addField(doc, label, value, x, y, maxWidth) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(104, 88, 74);
+        doc.text(label.toUpperCase(), x, y);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        doc.setTextColor(35, 28, 22);
+
+        return addWrappedText(doc, String(value), x, y + 15, maxWidth, 15) + 8;
+    }
+
+    function addWrappedText(doc, text, x, y, maxWidth, lineHeight) {
+        const lines = doc.splitTextToSize(String(text), maxWidth);
+        doc.text(lines, x, y);
+        return y + lines.length * lineHeight;
+    }
+
+    function addPagedWrappedText(doc, text, x, y, maxWidth, lineHeight, margin, pageHeight) {
+        const lines = doc.splitTextToSize(String(text), maxWidth);
+        let currentY = y;
+
+        lines.forEach((line) => {
+            currentY = ensureSpace(doc, currentY, lineHeight, margin, pageHeight);
+            doc.text(line, x, currentY);
+            currentY += lineHeight;
+        });
+
+        return currentY;
+    }
+
+    function ensureSpace(doc, y, neededHeight, margin, pageHeight) {
+        if (y + neededHeight <= pageHeight - margin) {
+            return y;
+        }
+
+        doc.addPage();
+        return margin;
+    }
+
+    function addPageFooters(doc) {
+        const pageCount = doc.internal.getNumberOfPages();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+            doc.setPage(pageNumber);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(120, 105, 90);
+            doc.text("AI Artifact Identifier", 48, pageHeight - 28);
+            doc.text(`Page ${pageNumber} of ${pageCount}`, pageWidth - 48, pageHeight - 28, { align: "right" });
+        }
+    }
+
+    function formatReportDate(date) {
+        return (date || new Date()).toLocaleString("en-IN", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+    function sanitizeFileName(name) {
+        return String(name)
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .slice(0, 80) || "artifact";
     }
 });
