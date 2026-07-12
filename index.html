@@ -97,10 +97,22 @@
             font-weight: 700;
         }
 
-        .nav-inner a {
+        .nav-inner a,
+        .nav-inner button {
+            border: 0;
+            background: transparent;
             color: #fff;
+            font: inherit;
+            font-weight: 700;
             text-decoration: underline;
             text-underline-offset: 3px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .nav-inner a:hover,
+        .nav-inner button:hover {
+            color: #f7d48a;
         }
 
         .app-frame {
@@ -422,12 +434,8 @@
             </div>
             <nav class="nav-strip" aria-label="Main navigation">
                 <div class="nav-inner">
-                    <a href="#">Home</a>
-                    <a href="#">Explore</a>
-                    <a href="#">News &amp; Blog</a>
-                    <a href="#">Events &amp; Festivals</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
+                    <a href="https://frontend-sable-alpha-43.vercel.app">Home</a>
+                    <button type="button" id="refreshPageButton">Refresh</button>
                 </div>
             </nav>
         </header>
@@ -540,6 +548,11 @@
     </div>
 
     <script src="sample_app.js"></script>
+    <script>
+        document.getElementById("refreshPageButton").addEventListener("click", function () {
+            window.location.reload();
+        });
+    </script>
 </body>
 
 </html>
