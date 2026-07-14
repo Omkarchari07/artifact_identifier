@@ -28,8 +28,8 @@ from tensorflow.keras.callbacks import (
 
 IMG_SIZE = 224
 BATCH_SIZE = 8
-EPOCHS_HEAD = 3
-EPOCHS_FINE = 2
+EPOCHS_HEAD = 10
+EPOCHS_FINE = 40
 
 TRAIN_DIR = "dataset_split/train"
 VAL_DIR = "dataset_split/val"
