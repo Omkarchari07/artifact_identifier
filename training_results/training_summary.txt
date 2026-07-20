@@ -1,0 +1,15 @@
+Training Summary
+================
+Model name: EfficientNetB0
+Number of classes: 118
+Number of training images: 4855
+Number of validation images: 340
+Image size: 224 x 224
+Batch size: 8
+Epochs: 15
+Final Training Accuracy: 0.9662
+Final Validation Accuracy: 0.9735
+Final Training Loss: 0.1882
+Final Validation Loss: 0.1283
+Training time: 29m 16s
+Training time (seconds): 1756.13

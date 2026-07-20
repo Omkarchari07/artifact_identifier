@@ -39,6 +39,15 @@ labels_path = LABELS_PATH if LABELS_PATH.exists() else ROOT_LABELS_PATH
 with open(labels_path, "r", encoding="utf-8") as f:
     CLASS_NAMES = json.load(f)
 
+model_output_classes = model.output_shape[-1]
+
+if model_output_classes is not None and model_output_classes != len(CLASS_NAMES):
+    raise ValueError(
+        "Model output class count does not match labels.json. "
+        f"Model outputs: {model_output_classes}, labels: {len(CLASS_NAMES)}. "
+        "Retrain the model or restore the matching labels file."
+    )
+
 
 def load_artifact_database(metadata_root):
 

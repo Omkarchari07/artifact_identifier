@@ -31,7 +31,7 @@ BATCH_SIZE = 8
 EPOCHS_HEAD = 10
 EPOCHS_FINE = 40
 
-TRAIN_DIR = "dataset_split/train"
+TRAIN_DIR = "dataset_split/aug_Train"
 VAL_DIR = "dataset_split/val"
 MODEL_DIR = Path("models")
 BEST_MODEL_PATH = MODEL_DIR / "best_model.keras"

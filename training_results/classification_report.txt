@@ -1,0 +1,124 @@
+                                                                                  precision    recall  f1-score   support
+
+                                            A fountain piece architectural piece     1.0000    1.0000    1.0000         1
+                                   Affonoso de Albuquerque Statue of Albuquerque     1.0000    1.0000    1.0000         2
+                                                              Arabic Inscription     1.0000    1.0000    1.0000         3
+                                                  Architectural Piece-Prabhavali     1.0000    1.0000    1.0000         1
+                                                            Architectural member     1.0000    1.0000    1.0000        12
+                                                                       Art Stone     1.0000    1.0000    1.0000         1
+                                                                        Bhairava     1.0000    1.0000    1.0000         3
+                                                                        Bhairavi     1.0000    1.0000    1.0000         3
+                                                                          Brahma     1.0000    1.0000    1.0000         1
+                         Bronze medal issued by university of catolica portuguse     1.0000    1.0000    1.0000         2
+                                                                          Buddha     1.0000    1.0000    1.0000         1
+                                                                    Burial Stone     1.0000    1.0000    1.0000         2
+                                                                   Bust Of Saint     1.0000    1.0000    1.0000         1
+                                                               Chaturmukhi Shiva     1.0000    1.0000    1.0000         1
+                                  Chhatrapati Sambhaji Maharaj Stone Inscription     1.0000    1.0000    1.0000         1
+                                                          Chovisi of Rishabhnath     1.0000    1.0000    1.0000         1
+                                                                    Coat of Arms     1.0000    1.0000    1.0000         2
+Coat of Arms A cross in the middle with four animals on either side of the cross     1.0000    1.0000    1.0000         1
+                                                             Coat of Arms Bishop     1.0000    1.0000    1.0000         2
+                                                          Coat of Arms Portuguse     1.0000    1.0000    1.0000         1
+             Coat of Arms Royal On both sides are to be seen the emblem engraved     1.0000    1.0000    1.0000         1
+                                                    Combined Hero-cum-Sati Stone     1.0000    1.0000    1.0000         1
+                                                         Combined memorial stone     0.8000    1.0000    0.8889         4
+                                                                           Durga     1.0000    1.0000    1.0000         1
+                                                        Ecclesiastical Artifacts     1.0000    1.0000    1.0000         2
+                                                                 Feet of a Deity     1.0000    1.0000    1.0000         1
+                                              Foot print of a deity or a royalty     1.0000    1.0000    1.0000         1
+                                                                 Four leg Animal     1.0000    1.0000    1.0000         2
+                             Fragmentary Sculpture of a deity and two attendants     1.0000    1.0000    1.0000         1
+                                                                    Fruit Basket     1.0000    1.0000    1.0000         3
+                                                                     Gajalakshmi     1.0000    1.0000    1.0000         9
+                                                                         Ganesha     1.0000    1.0000    1.0000         4
+                                                           Goa Lottory Apparatus     1.0000    1.0000    1.0000         1
+                                                                         Hanuman     1.0000    1.0000    1.0000         3
+                                                                  Head of Brahma     1.0000    1.0000    1.0000         3
+                                                                   Head of Nandi     1.0000    1.0000    1.0000         3
+                                                                   Head of Vetal     1.0000    1.0000    1.0000         2
+                                                                      Hero Stone     1.0000    0.9167    0.9565        12
+                                      Inscribed slab with Portuguese Inscription     1.0000    1.0000    1.0000         1
+                                                                      Kalbhairav     1.0000    1.0000    1.0000         1
+                                                             Kannada Inscription     1.0000    1.0000    1.0000         3
+                                                                     Kulapurusha     1.0000    1.0000    1.0000         2
+                                        Kulpurasa standing with sword and shield     1.0000    1.0000    1.0000         3
+                                                                            Lion     1.0000    1.0000    1.0000         1
+                                                             Mahishasura Mardini     1.0000    1.0000    1.0000         6
+                                                                          Makara     1.0000    1.0000    1.0000         3
+                                                                     Male figure     1.0000    1.0000    1.0000         2
+                                                             Marathi Inscription     1.0000    1.0000    1.0000         2
+                                               Metal image of lord Shiva Mangesh     1.0000    1.0000    1.0000         3
+                                            Metalic Block with Portuguese Emblem     1.0000    1.0000    1.0000         2
+                                                            Model of Fort of Diu     1.0000    1.0000    1.0000         1
+                                                                Model of Sikhara     1.0000    1.0000    1.0000         1
+                                              Mutilated, ornamented Vetala image     1.0000    1.0000    1.0000         6
+                                                                           Nandi     1.0000    0.8571    0.9231         7
+              Ornamental flower vase with full blossom flower and creeper design     1.0000    1.0000    1.0000         4
+                                               Pedestal yoni bhaga of Siva linga     1.0000    1.0000    1.0000         1
+                                                             Persian Inscription     1.0000    1.0000    1.0000         6
+                                         Persian Inscription of Ibrahim Adilshah     1.0000    1.0000    1.0000         6
+                                                                     Pillar base     1.0000    1.0000    1.0000         2
+                                                          Portuguese Inscription     1.0000    1.0000    1.0000         2
+                                                   Portuguese Royal Coat of Arms     1.0000    1.0000    1.0000         1
+                                                            Sand Stone Sculpture     1.0000    1.0000    1.0000         3
+                                                                      Sati Stone     1.0000    1.0000    1.0000         4
+                                                   Sculpture image of a skeleton     1.0000    1.0000    1.0000         3
+                                                       Sculpture of flying Angel     1.0000    1.0000    1.0000         2
+                                                          Sculpture unidentified     1.0000    1.0000    1.0000         1
+                                                 Seated female over a high chair     1.0000    1.0000    1.0000         2
+                                                                  Shanmukhamurty     1.0000    1.0000    1.0000         4
+                                                                     Shiva Linga     1.0000    1.0000    1.0000         7
+                                                           Slab with animal head     1.0000    1.0000    1.0000         1
+                                                           Standing Female Deity     1.0000    1.0000    1.0000         1
+                                                                   Standing male     1.0000    1.0000    1.0000         2
+                                       Statue in Bronze of Afonso de Albuquerque     1.0000    1.0000    1.0000         4
+                                                  Statue of Our Lady of Miracles     1.0000    1.0000    1.0000         1
+                                         Stone Architectural member of portuguse     1.0000    1.0000    1.0000         1
+                                                            Structural component     1.0000    1.0000    1.0000         1
+                                                                         Sundial     1.0000    1.0000    1.0000         1
+                                                                           Surya     1.0000    1.0000    1.0000        11
+                                                            Tomb stone of Bishop     1.0000    1.0000    1.0000         3
+                                                                Torso of a deity     1.0000    1.0000    1.0000         1
+                                                         Torso of a female deity     1.0000    1.0000    1.0000         4
+                                                           Torso of a male deity     1.0000    1.0000    1.0000         1
+                                                                   Uma-Maheshwar     1.0000    1.0000    1.0000         4
+                                                          Uma-Maheshwar in round     1.0000    1.0000    1.0000         6
+                                                                      Vastukhand     1.0000    1.0000    1.0000         2
+                                                                           Vetal     1.0000    1.0000    1.0000        11
+                                                                          Vishnu     1.0000    1.0000    1.0000         3
+                                                Vishnu Dashavathara on Prabhavli     1.0000    1.0000    1.0000         7
+                                                                         Warrior     1.0000    1.0000    1.0000         3
+                                                          Wooden Statue of Angel     1.0000    1.0000    1.0000         2
+                                                   Wooden Statue of Mother marry     1.0000    0.5000    0.6667         4
+                                                       Wooden Statue of StLausio     1.0000    1.0000    1.0000         2
+                                                        Wooden Statue of StPeter     0.7500    1.0000    0.8571         3
+                                           Wooden Statue of of a Christian saint     0.0000    0.0000    0.0000         0
+                                                      Wooden sculpture of Bishop     1.0000    1.0000    1.0000         1
+                                         Wooden sculpture of our lady of piedade     1.0000    1.0000    1.0000         3
+                                             Wooden statue of Our Lady of Rosary     1.0000    1.0000    1.0000         4
+                                                      Wooden statue of StSislica     0.0000    0.0000    0.0000         0
+                                                          Wooden statue of marry     0.5000    0.7500    0.6000         4
+                                         Wooden statue of merry and Infant jesus     0.5000    0.5000    0.5000         4
+                                                  Wooden statue of saint Anthony     1.0000    1.0000    1.0000         5
+                                                      Wooden statue of st Loosia     1.0000    1.0000    1.0000         1
+                                                 Wooden statue of stJohn Baptist     1.0000    1.0000    1.0000         3
+                                                                  ceramic sherds     1.0000    1.0000    1.0000         8
+                                                           circular bronze medal     1.0000    1.0000    1.0000         2
+                                                         circular bronze momento     1.0000    1.0000    1.0000         2
+                                                         decorated wooden Pilaar     1.0000    1.0000    1.0000         3
+                                                                    flying angel     1.0000    1.0000    1.0000         2
+                                               fountain stone with human figures     1.0000    1.0000    1.0000         4
+                                                                 jesus crucified     1.0000    1.0000    1.0000         1
+                                                             sculpture of Bishop     1.0000    1.0000    1.0000         3
+                                                           statue of a Female St     1.0000    1.0000    1.0000         4
+                                                            statue of a StJoseph     1.0000    1.0000    1.0000         2
+                                              statue of a scarred heart of Jesus     0.7500    1.0000    0.8571         3
+                                                      statue of stFrancis xavier     1.0000    1.0000    1.0000         3
+                                                                  torso of nandi     0.8333    1.0000    0.9091         5
+                                                            wooden bust of jesus     1.0000    0.7500    0.8571         4
+                                                   wooden carving of saint Peter     1.0000    0.5000    0.6667         2
+
+                                                                        accuracy                         0.9735       340
+                                                                       macro avg     0.9672    0.9642    0.9634       340
+                                                                    weighted avg     0.9790    0.9735    0.9736       340
